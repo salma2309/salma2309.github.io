@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salma's Smoothies - Order Online</title>
+    <!-- Script Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fffafb;
+            scroll-behavior: smooth;
+        }
+        .font-pacifico {
+            font-family: 'Pacifico', cursive;
+        }
+        
+        /* Daftar Warna Pastel untuk Menu */
+        .bg-pastel-pink { background-color: #ffe5ec; }
+        .bg-pastel-yellow { background-color: #fff9db; }
+        .bg-pastel-green { background-color: #ebfbee; }
+        .bg-pastel-purple { background-color: #f3f0ff; }
+        .bg-pastel-blue { background-color: #e7f5ff; }
+        .bg-pastel-orange { background-color: #fff4e6; }
+        .bg-pastel-red { background-color: #fff0f0; }
+        .bg-pastel-teal { background-color: #e6fffa; }
+        
+        /* Efek Hover Menu */
+        .menu-item {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+        .menu-item:hover {
+            transform: translateY(-5px);
+            border-color: #ffb5c5;
+        }
+
+        /* Styling Logo Bulat */
+        .rounded-logo {
+            border-radius: 9999px;
+            object-fit: cover;
+            border: 3px solid #ffe5ec;
+            background-color: white;
+        }
+
+        /* Animasi Slide Modal Keranjang */
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        .animate-slide {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        /* Animasi Mengambang Logo */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Bagian Navigasi -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-pink-100 shadow-sm">
+        <div class="container mx-auto px-4 md:px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="https://simangu.smksalirsyad-hgl.sch.id/apimangu/uploads/siswa/232410046/1773107732_b654184c.png" 
+                     alt="Salma's Smoothies" 
+                     class="h-10 w-10 md:h-12 md:w-12 rounded-logo border-2 shadow-sm">
+                <h1 class="text-lg md:text-xl font-pacifico text-pink-400">Salma's Smoothies</h1>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Tombol Keranjang -->
+                <button onclick="toggleCart()" class="relative p-2 bg-pink-50 rounded-full text-pink-500 hover:bg-pink-100 transition shadow-sm">
+                    <span class="text-2xl">🛒</span>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-pink-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Bagian Banner & Profil -->
+    <section id="home" class="py-6 px-6">
+        <div class="container mx-auto max-w-6xl">
+            <!-- Banner Produk (Terpisah) -->
+            <div class="relative overflow-hidden rounded-[2.5rem] shadow-xl mb-10 h-[250px] md:h-[450px]">
+                <img src="https://simangu.smksalirsyad-hgl.sch.id/apimangu/uploads/siswa/232410046/1773113406_84bf4018.png" 
+                     alt="Banner Produk Smoothies" 
+                     class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-8">
+                     <div class="flex items-center space-x-2 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg">
+                        <span class="text-lg">🛵</span>
+                        <span class="font-bold text-pink-500 text-xs md:text-sm tracking-tight">Delivery Area Haurgeulis</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profil & Logo (Terpisah) -->
+            <div class="text-center flex flex-col items-center max-w-3xl mx-auto">
+                <div class="mb-6 animate-float">
+                    <img src="https://simangu.smksalirsyad-hgl.sch.id/apimangu/uploads/siswa/232410046/1773107732_b654184c.png" 
+                         alt="Logo Bulat Salma" 
+                         class="w-28 h-28 md:w-36 md:h-36 rounded-logo shadow-lg border-4 border-white">
+                </div>
+                
+                <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+                    Segar & <span class="text-pink-400 font-pacifico">Siap Antar!</span>
+                </h2>
+                
+                <p class="text-lg text-gray-600 leading-relaxed mb-4">
+                    Halo, saya <span class="font-bold text-pink-500 underline decoration-pink-200 italic">Salma Sabila Putri</span>. 
+                    Yuk, pilih smoothies favoritmu dan rasakan kesegaran buah asli hari ini!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bagian Menu -->
+    <section id="menu" class="py-12 bg-white rounded-t-[3rem] shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.05)]">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-pacifico text-pink-400">Daftar Menu</h2>
+                <p class="text-gray-500">Klik tombol + untuk menambah ke keranjang</p>
+            </div>
+            
+            <!-- Grid Menu (Akan diisi oleh JavaScript) -->
+            <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <!-- Data Menu dimasukkan via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Bagian Testimoni -->
+    <section id="testimonials" class="py-16 bg-pink-50/30">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-pacifico text-pink-400">Suara Pengunjung</h2>
+                <p class="text-gray-500 italic">Cerita segar dari para pelanggan kami</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Testimoni 1 -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-pink-100">
+                    <p class="text-gray-600 italic mb-6">"Smoothies Strawberry-nya beneran kerasa buah aslinya, bukan cuma sirup. Seger banget!"</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-pastel-pink rounded-full flex items-center justify-center text-pink-500 font-bold mr-3">AN</div>
+                        <h4 class="font-bold text-gray-800 text-sm">Andini</h4>
+                    </div>
+                </div>
+                <!-- Testimoni 2 -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-pink-100">
+                    <p class="text-gray-600 italic mb-6">"Layanannya cepet banget! Baru pesen lewat WA, eh nggak sampe 20 menit udah nyampe."</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-pastel-green rounded-full flex items-center justify-center text-green-500 font-bold mr-3">RK</div>
+                        <h4 class="font-bold text-gray-800 text-sm">Rizky K.</h4>
+                    </div>
+                </div>
+                <!-- Testimoni 3 -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-pink-100">
+                    <p class="text-gray-600 italic mb-6">"Harganya terjangkau tapi rasanya premium. Anak-anak saya suka banget Avocado Silky-nya."</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-pastel-blue rounded-full flex items-center justify-center text-blue-500 font-bold mr-3">BU</div>
+                        <h4 class="font-bold text-gray-800 text-sm">Bu Utami</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bagian Footer & Kontak -->
+    <footer id="contact" class="bg-gray-50 py-16 border-t border-gray-100">
+        <div class="container mx-auto px-6 text-center">
+            <img src="https://simangu.smksalirsyad-hgl.sch.id/apimangu/uploads/siswa/232410046/1773107732_b654184c.png" 
+                 class="h-16 w-16 mx-auto mb-4 rounded-logo border shadow-sm">
+            <h2 class="text-3xl font-pacifico text-pink-400 mb-6">Salma Sabila Putri</h2>
+            
+            <div class="max-w-xl mx-auto mb-10 bg-white p-6 rounded-3xl shadow-sm border border-pink-50">
+                <p class="text-gray-600 text-sm md:text-base italic font-semibold">
+                    📍 Jl. Raya Haurgeulis, Desa Cipancuh, RT 26 RW 12, Haurgeulis, Indramayu.
+                </p>
+            </div>
+
+            <div class="flex justify-center space-x-8 mb-8">
+                <a href="https://instagram.com/sblptrii_" target="_blank" class="flex flex-col items-center group">
+                    <span class="bg-pink-100 p-3 rounded-full text-pink-500 group-hover:bg-pink-200 transition">📸</span>
+                    <span class="text-xs mt-1 font-bold">Instagram</span>
+                </a>
+                <a href="https://wa.me/6283878764751" target="_blank" class="flex flex-col items-center group">
+                    <span class="bg-green-100 p-3 rounded-full text-green-500 group-hover:bg-green-200 transition">💬</span>
+                    <span class="text-xs mt-1 font-bold">WhatsApp</span>
+                </a>
+            </div>
+
+            <p class="text-sm text-gray-400 italic">
+                &copy; 2024 Salma's Smoothies. Kesegaran alami setiap hari.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Modal Keranjang Belanja -->
+    <div id="cart-modal" class="fixed inset-0 z-[100] bg-black/50 hidden">
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col animate-slide">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-pink-50">
+                <h3 class="text-xl font-bold text-pink-600">🛒 Keranjang Anda</h3>
+                <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600 text-3xl">&times;</button>
+            </div>
+
+            <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4">
+                <!-- Item Keranjang diisi oleh JS -->
+            </div>
+
+            <div class="p-6 border-t border-gray-100 bg-gray-50">
+                <div class="flex justify-between items-center mb-6 text-xl font-bold">
+                    <span>Total:</span>
+                    <span id="cart-total" class="text-pink-500">Rp 0</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="checkout('wa')" class="bg-green-500 text-white py-4 rounded-2xl font-bold shadow-md hover:bg-green-600 transition">Pesan via WA</button>
+                    <button onclick="checkout('ig')" class="bg-pink-500 text-white py-4 rounded-2xl font-bold shadow-md hover:bg-pink-600 transition">Pesan via IG</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Logika Aplikasi -->
+    <script>
+        // Data Produk yang tersedia
+        const menuData = [
+            { id: 1, name: "Strawberry Bliss", price: 25000, category: "Classic", color: "bg-pastel-pink", textColor: "text-pink-600" },
+            { id: 2, name: "Blueberry Cloud", price: 28000, category: "Antioxidant", color: "bg-pastel-blue", textColor: "text-blue-700" },
+            { id: 3, name: "Purple Dragon", price: 18000, category: "Exotic", color: "bg-pastel-purple", textColor: "text-purple-700" },
+            { id: 4, name: "Mango Sunshine", price: 22000, category: "Vitamin C", color: "bg-pastel-yellow", textColor: "text-yellow-700" },
+            { id: 5, name: "Tropical Punch", price: 20000, category: "Refresher", color: "bg-pastel-orange", textColor: "text-orange-700" },
+            { id: 6, name: "Pineapple Breeze", price: 24000, category: "Zesty", color: "bg-pastel-teal", textColor: "text-teal-700" },
+            { id: 7, name: "Green Detox", price: 30000, category: "Sehat", color: "bg-pastel-green", textColor: "text-green-700" },
+            { id: 8, name: "Watermelon Chill", price: 15000, category: "Hidrasi", color: "bg-pastel-red", textColor: "text-red-700" },
+            { id: 9, name: "Avocado Silky", price: 27000, category: "Krimy", color: "bg-pastel-blue", textColor: "text-blue-800" },
+            { id: 10, name: "Banana Berry", price: 15000, category: "Mix", color: "bg-pastel-pink", textColor: "text-pink-700" },
+            { id: 11, name: "Peach Creamy", price: 26000, category: "Lembut", color: "bg-pastel-yellow", textColor: "text-yellow-800" },
+            { id: 12, name: "Grape Glow", price: 23000, category: "Energi", color: "bg-pastel-purple", textColor: "text-purple-800" }
+        ];
+
+        let cart = [];
+
+        // Fungsi menampilkan grid menu
+        function renderMenu() {
+            const grid = document.getElementById('menu-grid');
+            grid.innerHTML = menuData.map(item => `
+                <div class="menu-item p-6 rounded-3xl ${item.color} flex justify-between items-center shadow-sm">
+                    <div class="text-left">
+                        <h4 class="text-xl font-bold ${item.textColor}">${item.name}</h4>
+                        <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">${item.category}</p>
+                        <p class="font-bold mt-1 text-gray-800">Rp ${item.price.toLocaleString('id-ID')}</p>
+                    </div>
+                    <button onclick="addToCart(${item.id})" class="bg-white/90 p-3 rounded-2xl hover:bg-white transition text-xl shadow-sm">➕</button>
+                </div>
+            `).join('');
+        }
+
+        // Fungsi tambah ke keranjang
+        function addToCart(id) {
+            const item = menuData.find(i => i.id === id);
+            const inCart = cart.find(i => i.id === id);
+            if (inCart) inCart.quantity += 1;
+            else cart.push({ ...item, quantity: 1 });
+            updateCartUI();
+        }
+
+        // Fungsi hapus dari keranjang
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCartUI();
+        }
+
+        // Sinkronisasi data ke tampilan (UI)
+        function updateCartUI() {
+            const countLabel = document.getElementById('cart-count');
+            const itemsContainer = document.getElementById('cart-items');
+            const totalLabel = document.getElementById('cart-total');
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            countLabel.innerText = totalCount;
+            countLabel.classList.toggle('hidden', totalCount === 0);
+
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = `<div class="text-center py-20 text-gray-400">Keranjang masih kosong 🌸</div>`;
+            } else {
+                itemsContainer.innerHTML = cart.map(item => `
+                    <div class="flex justify-between items-center bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                        <div>
+                            <p class="font-bold text-gray-800 text-sm">${item.name}</p>
+                            <p class="text-[10px] text-gray-500">${item.quantity}x @ Rp ${item.price.toLocaleString('id-ID')}</p>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="font-bold text-pink-500 text-sm">Rp ${(item.price * item.quantity).toLocaleString('id-ID')}</span>
+                            <button onclick="removeFromCart(${item.id})" class="text-red-400">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            totalLabel.innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+        }
+
+        // Fungsi toggle buka/tutup keranjang
+        function toggleCart() {
+            document.getElementById('cart-modal').classList.toggle('hidden');
+        }
+
+        // Logika pengiriman pesanan
+        function checkout(platform) {
+            if (cart.length === 0) return alert("Keranjang kosong!");
+            let msg = "*PESANAN SALMA'S SMOOTHIES*\n\n";
+            cart.forEach(item => msg += `✅ ${item.name} (${item.quantity}x)\n`);
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            msg += `\n*Total: Rp ${total.toLocaleString('id-ID')}*`;
+            
+            if (platform === 'wa') window.open(`https://wa.me/6283878764751?text=${encodeURIComponent(msg)}`, '_blank');
+            else window.open(`https://instagram.com/sblptrii_`, '_blank');
+        }
+
+        // Render menu saat halaman dimuat
+        window.onload = renderMenu;
+    </script>
+</body>
+</html>
